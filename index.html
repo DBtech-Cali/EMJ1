@@ -516,16 +516,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
 
     <script>
-        // Configuración Firebase - REEMPLAZA ESTOS VALORES CON TU CONFIGURACIÓN
-const firebaseConfig = {
-  apiKey: "AIzaSyBL-oAE3Mam_nwRTME-Rt87KE1VAJ9ieQs",
-  authDomain: "emj-db.firebaseapp.com",
-  databaseURL: "https://emj-db-default-rtdb.firebaseio.com",
-  projectId: "emj-db",
-  storageBucket: "emj-db.firebasestorage.app",
-  messagingSenderId: "382459743103",
-  appId: "1:382459743103:web:94361482f911749575e84a"
-};
+        // Configuración Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL-oAE3Mam_nwRTME-Rt87KE1VAJ9ieQs",
+            authDomain: "emj-db.firebaseapp.com",
+            databaseURL: "https://emj-db-default-rtdb.firebaseio.com",
+            projectId: "emj-db",
+            storageBucket: "emj-db.firebasestorage.app",
+            messagingSenderId: "382459743103",
+            appId: "1:382459743103:web:94361482f911749575e84a"
+        };
 
         // Configuración de la ruta de atención actualizada
         const attentionRoute = [
@@ -595,18 +595,36 @@ const firebaseConfig = {
             return attentionDate;
         }
 
-        // Inicialización
+        // Inicialización cuando se carga la página
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página cargada, inicializando...');
+            
+            // Establecer fecha actual en el input
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('userDate').value = today;
+            
+            // Inicializar Firebase
             initializeFirebase();
-            document.getElementById('userDate').value = new Date().toISOString().split('T')[0];
+            
+            // Cargar datos iniciales si Firebase falla
+            setTimeout(() => {
+                if (!isOnline) {
+                    console.log('Firebase no conectado, cargando datos locales');
+                    loadLocalData();
+                }
+            }, 3000);
+            
+            // Mostrar calendario inicial
+            updateCalendar();
         });
 
         // Inicializar Firebase
         function initializeFirebase() {
             try {
-                // Verificar si la configuración está completa
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "TU_API_KEY") {
-                    throw new Error("Por favor configura Firebase correctamente");
+                console.log('Inicializando Firebase...');
+                
+                if (!window.firebase) {
+                    throw new Error("Firebase SDK no cargado");
                 }
 
                 firebase.initializeApp(firebaseConfig);
@@ -615,40 +633,75 @@ const firebaseConfig = {
                 // Configurar listeners para datos en tiempo real
                 setupRealtimeListeners();
                 
-                updateConnectionStatus(true);
+                console.log('Firebase inicializado correctamente');
                 
             } catch (error) {
                 console.error('Error inicializando Firebase:', error);
-                showError('Error de conexión: ' + error.message);
+                showError('Error de conexión: ' + error.message + '. Usando modo offline.');
                 updateConnectionStatus(false);
-                
-                // Cargar datos locales como fallback
                 loadLocalData();
             }
         }
 
         // Configurar listeners de Firebase
         function setupRealtimeListeners() {
-            // Listener para usuarios
-            database.ref('users').on('value', (snapshot) => {
+            try {
+                // Listener de conexión
+                database.ref('.info/connected').on('value', (snapshot) => {
+                    const connected = snapshot.val();
+                    console.log('Estado de conexión:', connected);
+                    updateConnectionStatus(connected);
+                    
+                    if (connected && users.length === 0) {
+                        // Cargar datos cuando se conecte
+                        loadFirebaseData();
+                    }
+                });
+
+                // Listener para usuarios
+                database.ref('users').on('value', (snapshot) => {
+                    console.log('Datos de usuarios actualizados');
+                    const data = snapshot.val();
+                    users = data ? Object.values(data) : [];
+                    updateUserList();
+                    updateCalendar();
+                    updateStats();
+                });
+
+                // Listener para atenciones
+                database.ref('attentions').on('value', (snapshot) => {
+                    console.log('Datos de atenciones actualizados');
+                    const data = snapshot.val();
+                    attentions = data || {};
+                    updateCalendar();
+                    updateStats();
+                });
+
+            } catch (error) {
+                console.error('Error configurando listeners:', error);
+                showError('Error configurando listeners: ' + error.message);
+            }
+        }
+
+        // Cargar datos de Firebase
+        function loadFirebaseData() {
+            database.ref('users').once('value').then((snapshot) => {
                 const data = snapshot.val();
                 users = data ? Object.values(data) : [];
                 updateUserList();
                 updateCalendar();
                 updateStats();
+            }).catch((error) => {
+                console.error('Error cargando usuarios:', error);
             });
 
-            // Listener para atenciones
-            database.ref('attentions').on('value', (snapshot) => {
+            database.ref('attentions').once('value').then((snapshot) => {
                 const data = snapshot.val();
                 attentions = data || {};
                 updateCalendar();
                 updateStats();
-            });
-
-            // Listener de conexión
-            database.ref('.info/connected').on('value', (snapshot) => {
-                updateConnectionStatus(snapshot.val());
+            }).catch((error) => {
+                console.error('Error cargando atenciones:', error);
             });
         }
 
@@ -672,39 +725,67 @@ const firebaseConfig = {
             errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
             setTimeout(() => {
                 errorContainer.innerHTML = '';
-            }, 5000);
+            }, 8000);
         }
 
         // Cargar datos locales como fallback
         function loadLocalData() {
-            users = JSON.parse(localStorage.getItem('users') || '[]');
-            attentions = JSON.parse(localStorage.getItem('attentions') || '{}');
-            updateUserList();
-            updateCalendar();
-            updateStats();
+            console.log('Cargando datos locales...');
+            try {
+                users = JSON.parse(localStorage.getItem('emj_users') || '[]');
+                attentions = JSON.parse(localStorage.getItem('emj_attentions') || '{}');
+                console.log('Datos locales cargados:', users.length, 'usuarios');
+                updateUserList();
+                updateCalendar();
+                updateStats();
+            } catch (error) {
+                console.error('Error cargando datos locales:', error);
+                users = [];
+                attentions = {};
+                updateUserList();
+                updateCalendar();
+                updateStats();
+            }
         }
 
         // Guardar datos
         function saveData() {
             if (isOnline && database) {
-                // Guardar en Firebase
-                database.ref('users').set(users.reduce((obj, user) => {
-                    obj[user.id] = user;
-                    return obj;
-                }, {}));
-                
-                database.ref('attentions').set(attentions);
+                try {
+                    // Guardar en Firebase
+                    const usersObj = {};
+                    users.forEach(user => {
+                        usersObj[user.id] = user;
+                    });
+                    database.ref('users').set(usersObj);
+                    database.ref('attentions').set(attentions);
+                    console.log('Datos guardados en Firebase');
+                } catch (error) {
+                    console.error('Error guardando en Firebase:', error);
+                    saveLocalData();
+                }
             } else {
-                // Guardar localmente como fallback
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('attentions', JSON.stringify(attentions));
+                saveLocalData();
             }
         }
 
-        // Funciones de gestión de usuarios
-        async function addUser() {
+        // Guardar datos localmente
+        function saveLocalData() {
+            try {
+                localStorage.setItem('emj_users', JSON.stringify(users));
+                localStorage.setItem('emj_attentions', JSON.stringify(attentions));
+                console.log('Datos guardados localmente');
+            } catch (error) {
+                console.error('Error guardando datos localmente:', error);
+            }
+        }
+
+        // Agregar usuario
+        function addUser() {
             const name = document.getElementById('userName').value.trim();
             const date = document.getElementById('userDate').value;
+            
+            console.log('Agregando usuario:', name, date);
             
             if (!name || !date) {
                 alert('Por favor, completa todos los campos');
@@ -723,19 +804,19 @@ const firebaseConfig = {
                     egreso: false
                 };
                 
-                if (isOnline && database) {
-                    await database.ref(`users/${user.id}`).set(user);
-                } else {
-                    users.push(user);
-                    saveData();
-                    updateUserList();
-                    updateCalendar();
-                    updateStats();
-                }
+                users.push(user);
+                saveData();
+                
+                // Actualizar interfaz
+                updateUserList();
+                updateCalendar();
+                updateStats();
                 
                 // Limpiar formulario
                 document.getElementById('userName').value = '';
                 document.getElementById('userDate').value = new Date().toISOString().split('T')[0];
+                
+                console.log('Usuario agregado exitosamente');
                 
             } catch (error) {
                 console.error('Error agregando usuario:', error);
@@ -746,35 +827,26 @@ const firebaseConfig = {
             }
         }
 
-        async function removeUser(userId) {
+        // Eliminar usuario
+        function removeUser(userId) {
             if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
                 try {
-                    if (isOnline && database) {
-                        await database.ref(`users/${userId}`).remove();
-                        
-                        // Eliminar atenciones del usuario
-                        const userAttentions = {};
-                        Object.keys(attentions).forEach(key => {
-                            if (key.startsWith(userId + '_')) {
-                                userAttentions[key] = null;
-                            }
-                        });
-                        
-                        if (Object.keys(userAttentions).length > 0) {
-                            await database.ref('attentions').update(userAttentions);
+                    users = users.filter(user => user.id !== userId);
+                    
+                    // Eliminar atenciones del usuario
+                    Object.keys(attentions).forEach(key => {
+                        if (key.startsWith(userId + '_')) {
+                            delete attentions[key];
                         }
-                    } else {
-                        users = users.filter(user => user.id !== userId);
-                        Object.keys(attentions).forEach(key => {
-                            if (key.startsWith(userId + '_')) {
-                                delete attentions[key];
-                            }
-                        });
-                        saveData();
-                        updateUserList();
-                        updateCalendar();
-                        updateStats();
-                    }
+                    });
+                    
+                    saveData();
+                    updateUserList();
+                    updateCalendar();
+                    updateStats();
+                    
+                    console.log('Usuario eliminado exitosamente');
+                    
                 } catch (error) {
                     console.error('Error eliminando usuario:', error);
                     showError('Error al eliminar usuario: ' + error.message);
@@ -782,26 +854,23 @@ const firebaseConfig = {
             }
         }
 
-        async function markEgreso() {
+        // Marcar egreso
+        function markEgreso() {
             if (currentModalData) {
                 const egresoBtn = document.getElementById('egresoBtn');
                 egresoBtn.disabled = true;
                 egresoBtn.textContent = '⏳ Procesando...';
                 
                 try {
-                    if (isOnline && database) {
-                        await database.ref(`users/${currentModalData.userId}/egreso`).set(true);
-                    } else {
-                        const user = users.find(u => u.id === currentModalData.userId);
-                        if (user) {
-                            user.egreso = true;
-                            saveData();
-                            updateUserList();
-                            updateCalendar();
-                            updateStats();
-                        }
+                    const user = users.find(u => u.id === currentModalData.userId);
+                    if (user) {
+                        user.egreso = true;
+                        saveData();
+                        updateUserList();
+                        updateCalendar();
+                        updateStats();
+                        closeModal();
                     }
-                    closeModal();
                 } catch (error) {
                     console.error('Error marcando egreso:', error);
                     showError('Error al marcar egreso: ' + error.message);
@@ -812,11 +881,12 @@ const firebaseConfig = {
             }
         }
 
-        // Funciones del calendario
+        // Actualizar calendario
         function updateCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             
+            // Actualizar título del mes
             document.getElementById('currentMonth').textContent = 
                 currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })
                     .replace(/^./, str => str.toUpperCase());
@@ -854,4 +924,239 @@ const firebaseConfig = {
                     dayElement.classList.add('today');
                 }
                 
-                dayElement.innerHTML = `
+                dayElement.innerHTML = `<div class="day-number">${cellDate.getDate()}</div>`;
+                
+                // Agregar marcadores de atención
+                const attentionsForDay = getAttentionsForDate(cellDate);
+                attentionsForDay.forEach(attention => {
+                    const marker = document.createElement('div');
+                    marker.className = 'attention-marker';
+                    
+                    // Verificar si está completada
+                    const attentionKey = `${attention.user.id}_${attention.type}`;
+                    const savedAttention = attentions[attentionKey];
+                    const isCompleted = savedAttention && Object.values(savedAttention).filter(Boolean).length === 4;
+                    
+                    if (isCompleted) {
+                        marker.classList.add('completed');
+                    }
+                    
+                    marker.textContent = `${attention.user.name.split(' ')[0]} - ${attention.type}`;
+                    marker.onclick = (e) => {
+                        e.stopPropagation();
+                        openAttentionModal(attention);
+                    };
+                    dayElement.appendChild(marker);
+                });
+                
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            console.log('Calendario actualizado para', currentDate.getMonth() + 1, '/', currentDate.getFullYear());
+        }
+
+        // Obtener atenciones para una fecha específica
+        function getAttentionsForDate(date) {
+            const attentionsForDay = [];
+            users.filter(user => !user.egreso).forEach(user => {
+                attentionRoute.forEach(attention => {
+                    const attentionDate = calculateAttentionDate(user.startDate, attention);
+                    
+                    if (attentionDate.toDateString() === date.toDateString()) {
+                        attentionsForDay.push({
+                            user: user,
+                            type: attention.name,
+                            date: attentionDate,
+                            userId: user.id
+                        });
+                    }
+                });
+            });
+            return attentionsForDay;
+        }
+
+        // Navegación del calendario
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+            updateStats();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+            updateStats();
+        }
+
+        // Modal de atenciones
+        function openAttentionModal(attention) {
+            currentModalData = attention;
+            document.getElementById('modalTitle').textContent = attention.type;
+            document.getElementById('modalUser').textContent = `Usuario: ${attention.user.name}`;
+            document.getElementById('modalDate').textContent = `Fecha: ${attention.date.toLocaleDateString('es-ES')}`;
+            
+            const attentionKey = `${attention.user.id}_${attention.type}`;
+            const savedAttention = attentions[attentionKey] || {};
+            
+            // Actualizar checkboxes
+            ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
+                const checkbox = document.getElementById(service);
+                checkbox.checked = savedAttention[service] || false;
+                checkbox.onchange = updateAttentionVisual;
+            });
+            
+            updateAttentionVisual();
+            document.getElementById('attentionModal').style.display = 'block';
+        }
+
+        // Actualizar visual de atenciones
+        function updateAttentionVisual() {
+            ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
+                const checkbox = document.getElementById(service);
+                const container = checkbox.parentElement;
+                if (checkbox.checked) {
+                    container.classList.add('completed');
+                } else {
+                    container.classList.remove('completed');
+                }
+            });
+        }
+
+        // Guardar atención
+        function saveAttention() {
+            if (!currentModalData) return;
+            
+            const saveBtn = document.getElementById('saveAttentionBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '⏳ Guardando...';
+            
+            try {
+                const attentionKey = `${currentModalData.user.id}_${currentModalData.type}`;
+                const attentionData = {};
+                
+                ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
+                    attentionData[service] = document.getElementById(service).checked;
+                });
+                
+                attentions[attentionKey] = attentionData;
+                saveData();
+                updateCalendar();
+                updateStats();
+                
+                closeModal();
+                console.log('Atención guardada exitosamente');
+                
+            } catch (error) {
+                console.error('Error guardando atención:', error);
+                showError('Error al guardar atención: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Guardar Cambios';
+            }
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('attentionModal').style.display = 'none';
+            currentModalData = null;
+        }
+
+        // Actualizar lista de usuarios
+        function updateUserList() {
+            const userList = document.getElementById('userList');
+            
+            if (users.length === 0) {
+                userList.innerHTML = '<div class="loading">No hay usuarios registrados</div>';
+                return;
+            }
+            
+            userList.innerHTML = '';
+            
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div class="user-name">${user.name} ${user.egreso ? '(EGRESO)' : ''}</div>
+                    <div class="user-date">Ingreso: ${new Date(user.startDate).toLocaleDateString('es-ES')}</div>
+                    <button class="btn btn-danger" onclick="removeUser(${user.id})" style="margin-top: 10px;">🗑️ Eliminar</button>
+                `;
+                userList.appendChild(userItem);
+            });
+            
+            console.log('Lista de usuarios actualizada:', users.length, 'usuarios');
+        }
+
+        // Actualizar estadísticas del mes
+        function updateStats() {
+            const activeUsers = users.filter(user => !user.egreso).length;
+            document.getElementById('totalUsers').textContent = activeUsers;
+            
+            // Calcular atenciones del mes actual
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            
+            let monthAttentions = 0;
+            let completed = 0;
+            
+            for (let d = new Date(firstDayOfMonth); d <= lastDayOfMonth; d.setDate(d.getDate() + 1)) {
+                const attentionsForDay = getAttentionsForDate(new Date(d));
+                monthAttentions += attentionsForDay.length;
+                
+                attentionsForDay.forEach(attention => {
+                    const attentionKey = `${attention.user.id}_${attention.type}`;
+                    const savedAttention = attentions[attentionKey];
+                    
+                    if (savedAttention) {
+                        const completedServices = Object.values(savedAttention).filter(Boolean).length;
+                        if (completedServices === 4) {
+                            completed++;
+                        }
+                    }
+                });
+            }
+            
+            const percentage = monthAttentions > 0 ? Math.round((completed / monthAttentions) * 100) : 0;
+            
+            document.getElementById('monthAttentions').textContent = monthAttentions;
+            document.getElementById('completedAttentions').textContent = completed;
+            document.getElementById('completionPercentage').textContent = percentage + '%';
+            
+            // Actualizar barra de progreso
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+            
+            console.log('Estadísticas actualizadas:', {
+                activeUsers,
+                monthAttentions,
+                completed,
+                percentage: percentage + '%'
+            });
+        }
+
+        // Event listeners
+        window.onclick = function(event) {
+            const modal = document.getElementById('attentionModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Manejar errores no capturados
+        window.addEventListener('error', function(event) {
+            console.error('Error global:', event.error);
+            showError('Ocurrió un error inesperado. Revisa la consola para más detalles.');
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Promesa rechazada:', event.reason);
+            showError('Error de conexión. La aplicación funcionará en modo offline.');
+        });
+
+        // Logs de depuración
+        console.log('Script cargado completamente');
+        console.log('Configuración de atenciones:', attentionRoute.length, 'tipos');
+    </script>
+</body>
+</html>
