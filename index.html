@@ -811,7 +811,7 @@
         // Verificar si el usuario ya está autenticado
         function checkAuthentication() {
             try {
-                const authData = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
+                const authData = JSON.parse(sessionStorage.getItem(AUTH_KEY) || '{}');
                 const now = Date.now();
                 
                 // Verificar si la autenticación es válida y no ha expirado
