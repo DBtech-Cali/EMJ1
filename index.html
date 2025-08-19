@@ -13,11 +13,137 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to top, #09203f 0%, #537895 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
+        /* Estilos para la pantalla de login */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .login-form {
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.25);
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #f5c6cb;
+            font-size: 14px;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Clase para ocultar el login */
+        .hidden {
+            display: none;
+        }
+
+        /* Resto de estilos originales */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -28,7 +154,7 @@
         }
 
         .header {
-            background: linear-gradient(45deg, #2c3e50, #4a6741);
+            background: linear-gradient(-20deg, #6e45e2 0%, #88d3ce 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -39,6 +165,25 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         .connection-status {
@@ -59,6 +204,11 @@
         .status-offline {
             background: #dc3545;
             color: white;
+        }
+
+        .status-syncing {
+            background: #ffc107;
+            color: black;
         }
 
         .main-content {
@@ -176,6 +326,11 @@
 
         .attention-marker.completed {
             background: #28a745;
+        }
+
+        .attention-marker.partial {
+            background: #ffc107;
+            color: black;
         }
 
         .form-group {
@@ -382,13 +537,35 @@
             color: #6c757d;
         }
 
-        .error-message {
+        .error-message-app {
             background: #f8d7da;
             color: #721c24;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .sync-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -405,109 +582,154 @@
             .attention-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .login-container {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="connection-status" id="connectionStatus">
-                🔄 Conectando...
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">🌱</div>
+            <h1 class="login-title">Semillas Salesianas</h1>
+            <p class="login-subtitle">Sistema EMJ - Acceso Seguro</p>
+            
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    class="password-input" 
+                    placeholder="Ingresa la contraseña"
+                    autocomplete="current-password"
+                    required
+                />
+                <button type="submit" class="login-btn" id="loginBtn">
+                    🔓 Ingresar al Sistema
+                </button>
+            </form>
+            
+            <div id="loginError" class="error-message" style="display: none;">
+                ❌ Contraseña incorrecta. Inténtalo de nuevo.
             </div>
-            <h1>Semillas Salesianas - EMJ</h1>
-            <p>Seguimiento de Herramientas de Monitoreo MAC y Atenciones</p>
-        </div>
-
-        <div id="errorContainer"></div>
-
-        <div class="main-content">
-            <div class="calendar-section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalUsers">0</div>
-                        <div class="stat-label">Usuarios Activos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="monthAttentions">0</div>
-                        <div class="stat-label">Atenciones Este Mes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="completedAttentions">0</div>
-                        <div class="stat-label">Completadas</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="completionPercentage">0%</div>
-                        <div class="stat-label">Porcentaje Completado</div>
-                    </div>
-                </div>
-
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button class="calendar-nav" onclick="previousMonth()">◀ Anterior</button>
-                        <h2 id="currentMonth"></h2>
-                        <button class="calendar-nav" onclick="nextMonth()">Siguiente ▶</button>
-                    </div>
-                    <div class="calendar-grid" id="calendarGrid"></div>
-                </div>
-            </div>
-
-            <div class="user-management">
-                <h2 style="margin-bottom: 20px; color: #495057;">Gestión de Usuarios</h2>
-                
-                <div class="form-group">
-                    <label for="userName">Nombre del Usuario:</label>
-                    <input type="text" id="userName" placeholder="Ingresa el nombre completo">
-                </div>
-                
-                <div class="form-group">
-                    <label for="userDate">Fecha de Ingreso:</label>
-                    <input type="date" id="userDate">
-                </div>
-                
-                <button class="btn" onclick="addUser()" id="addUserBtn">➕ Agregar Usuario</button>
-                
-                <h3 style="margin: 30px 0 15px 0; color: #495057;">Usuarios Registrados</h3>
-                <div class="user-list" id="userList">
-                    <div class="loading">Cargando usuarios...</div>
-                </div>
+            
+            <div class="login-footer">
+                <p>🔒 Acceso autorizado únicamente</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal para detalles de atención -->
-    <div id="attentionModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <p id="modalUser"></p>
-            <p id="modalDate"></p>
-            
-            <div class="attention-grid" id="attentionGrid">
-                <div class="attention-check">
-                    <input type="checkbox" id="psicologia">
-                    <label for="psicologia">Psicología</label>
+    <!-- Aplicación Principal -->
+    <div id="mainApp" class="hidden">
+        <div class="container">
+            <div class="header">
+                <button class="logout-btn" onclick="logout()">🚪 Cerrar Sesión</button>
+                <div class="connection-status" id="connectionStatus">
+                    🔄 Conectando...
                 </div>
-                <div class="attention-check">
-                    <input type="checkbox" id="trabajoSocial">
-                    <label for="trabajoSocial">Trabajo Social</label>
+                <h1>Semillas Salesianas - EMJ</h1>
+                <p>Seguimiento de Herramientas de Monitoreo MAC y Atenciones</p>
+            </div>
+
+            <div id="errorContainer"></div>
+            <div id="successContainer"></div>
+
+            <div class="main-content">
+                <div class="calendar-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Usuarios Activos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="monthAttentions">0</div>
+                            <div class="stat-label">Atenciones pendientes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="completedAttentions">0</div>
+                            <div class="stat-label">Completadas</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="completionPercentage">0%</div>
+                            <div class="stat-label">Porcentaje Completado</div>
+                        </div>
+                    </div>
+
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="previousMonth()">◀ Anterior</button>
+                            <h2 id="currentMonth"></h2>
+                            <button class="calendar-nav" onclick="nextMonth()">Siguiente ▶</button>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
                 </div>
-                <div class="attention-check">
-                    <input type="checkbox" id="pedagogia">
-                    <label for="pedagogia">Pedagogía</label>
-                </div>
-                <div class="attention-check">
-                    <input type="checkbox" id="nutricion">
-                    <label for="nutricion">Nutrición</label>
+
+                <div class="user-management">
+                    <h2 style="margin-bottom: 20px; color: #495057;">Gestión de Usuarios</h2>
+                    
+                    <div class="form-group">
+                        <label for="userName">Nombre del Usuario:</label>
+                        <input type="text" id="userName" placeholder="Ingresa el nombre completo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userDate">Fecha de Ingreso:</label>
+                        <input type="date" id="userDate">
+                    </div>
+                    
+                    <button class="btn" onclick="addUser()" id="addUserBtn">➕ Agregar Usuario</button>
+                    
+                    <h3 style="margin: 30px 0 15px 0; color: #495057;">Usuarios Registrados</h3>
+                    <div class="user-list" id="userList">
+                        <div class="loading">Cargando usuarios...</div>
+                    </div>
                 </div>
             </div>
-            
-            <div style="margin-top: 25px; text-align: center;">
-                <button class="btn" onclick="saveAttention()" id="saveAttentionBtn">💾 Guardar Cambios</button>
-                <button class="btn btn-danger" onclick="markEgreso()" id="egresoBtn">🚪 Marcar Egreso</button>
+        </div>
+
+        <!-- Modal para detalles de atención -->
+        <div id="attentionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle"></h2>
+                <p id="modalUser"></p>
+                <p id="modalDate"></p>
+                
+                <div class="attention-grid" id="attentionGrid">
+                    <div class="attention-check">
+                        <input type="checkbox" id="psicologia">
+                        <label for="psicologia">Psicología</label>
+                    </div>
+                    <div class="attention-check">
+                        <input type="checkbox" id="trabajoSocial">
+                        <label for="trabajoSocial">Trabajo Social</label>
+                    </div>
+                    <div class="attention-check">
+                        <input type="checkbox" id="pedagogia">
+                        <label for="pedagogia">Pedagogía</label>
+                    </div>
+                    <div class="attention-check">
+                        <input type="checkbox" id="nutricion">
+                        <label for="nutricion">Nutrición</label>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; text-align: center;">
+                    <button class="btn" onclick="saveAttention()" id="saveAttentionBtn">💾 Guardar Cambios</button>
+                    <button class="btn btn-danger" onclick="markEgreso()" id="egresoBtn">🚪 Marcar Egreso</button>
+                </div>
             </div>
+        </div>
+
+        <!-- Indicador de sincronización -->
+        <div id="syncIndicator" class="sync-indicator">
+            Sincronizando...
         </div>
     </div>
 
@@ -516,6 +738,111 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
 
     <script>
+        // Configuración de autenticación
+        const CORRECT_PASSWORD = 'Mauxi123';
+        const SESSION_KEY = 'emj_authenticated';
+
+        // Verificar autenticación al cargar la página
+        function checkAuthentication() {
+            const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
+            
+            if (isAuthenticated) {
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // Mostrar pantalla de login
+        function showLoginScreen() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('passwordInput').focus();
+        }
+
+        // Mostrar aplicación principal
+        function showMainApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            // Inicializar la aplicación solo si no ha sido inicializada
+            if (!window.appInitialized) {
+                initializeApp();
+                window.appInitialized = true;
+            }
+        }
+
+        // Manejar login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const password = document.getElementById('passwordInput').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorDiv = document.getElementById('loginError');
+            
+            // Deshabilitar botón temporalmente
+            loginBtn.disabled = true;
+            loginBtn.textContent = '🔄 Verificando...';
+            
+            // Simular un pequeño delay para mejor UX
+            setTimeout(() => {
+                if (password === CORRECT_PASSWORD) {
+                    // Login exitoso
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                    errorDiv.style.display = 'none';
+                    
+                    // Animación de éxito
+                    loginBtn.textContent = '✅ ¡Acceso Autorizado!';
+                    loginBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                    
+                    setTimeout(() => {
+                        showMainApp();
+                        // Resetear formulario
+                        document.getElementById('passwordInput').value = '';
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '🔓 Ingresar al Sistema';
+                        loginBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    }, 1000);
+                } else {
+                    // Login fallido
+                    errorDiv.style.display = 'block';
+                    document.getElementById('passwordInput').value = '';
+                    document.getElementById('passwordInput').focus();
+                    
+                    // Animación de error
+                    loginBtn.textContent = '❌ Acceso Denegado';
+                    loginBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                    
+                    setTimeout(() => {
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '🔓 Ingresar al Sistema';
+                        loginBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        // Cerrar sesión
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                sessionStorage.removeItem(SESSION_KEY);
+                showLoginScreen();
+            }
+        }
+
+        // Manejar Enter en el campo de contraseña
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            
+            document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    handleLogin(event);
+                }
+            });
+        });
+
+        // RESTO DEL CÓDIGO ORIGINAL DE LA APLICACIÓN (sin modificaciones)
+        
         // Configuración Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBL-oAE3Mam_nwRTME-Rt87KE1VAJ9ieQs",
@@ -527,19 +854,19 @@
             appId: "1:382459743103:web:94361482f911749575e84a"
         };
 
-        // Configuración de la ruta de atención actualizada
+        // Configuración de la ruta de atención
         const attentionRoute = [
             { name: 'PRELIMINAR', type: 'days_from_start', value: 9 },
             { name: 'INTEGRADORA', type: 'days_from_start', value: 22 },
             { name: 'PLAN', type: 'months_from_start', value: 1 },
-            { name: 'ATENCIÓN0.1', type: 'days_from_plan', value: 15 },
-            { name: 'ATENCIÓN0.2', type: 'months_from_plan', value: 1 },
-            { name: 'ATENCIÓN0.3', type: 'months_from_plan', value: 2 },
-            { name: 'ATENCIÓN0.4', type: 'days_from_start', value: 110 },
+            { name: 'ATENCIÓN01', type: 'days_from_plan', value: 15 },
+            { name: 'ATENCIÓN02', type: 'months_from_plan', value: 1 },
+            { name: 'ATENCIÓN03', type: 'months_from_plan', value: 2 },
+            { name: 'ATENCIÓN04', type: 'days_from_start', value: 110 },
             { name: 'SEGUIMIENTO1', type: 'months_from_plan', value: 3 },
-            { name: 'ATENCIÓN1.1', type: 'months_from_plan', value: 4 },
-            { name: 'ATENCIÓN1.2', type: 'months_from_plan', value: 5 },
-            { name: 'ATENCIÓN1.3', type: 'days_from_start', value: 200 },
+            { name: 'ATENCIÓN11', type: 'months_from_plan', value: 4 },
+            { name: 'ATENCIÓN12', type: 'months_from_plan', value: 5 },
+            { name: 'ATENCIÓN13', type: 'days_from_start', value: 200 },
             { name: 'SEGUIMIENTO2', type: 'months_from_plan', value: 6 },
             { name: 'ATENCIÓN2', type: 'days_from_start', value: 255 },
             { name: 'SEGUIMIENTO3', type: 'months_from_plan', value: 9 },
@@ -558,46 +885,12 @@
         let currentModalData = null;
         let database = null;
         let isOnline = false;
+        let syncQueue = [];
+        let isSyncing = false;
 
-        // Función para calcular fechas de atención
-        function calculateAttentionDate(startDate, attention) {
-            const start = new Date(startDate);
-            let attentionDate = new Date(start);
-
-            switch (attention.type) {
-                case 'days_from_start':
-                    attentionDate.setDate(start.getDate() + attention.value);
-                    break;
-                    
-                case 'months_from_start':
-                    attentionDate.setMonth(start.getMonth() + attention.value);
-                    break;
-                    
-                case 'days_from_plan':
-                    // Primero calculamos la fecha del PLAN (1 mes desde el inicio)
-                    const planDate = new Date(start);
-                    planDate.setMonth(start.getMonth() + 1);
-                    // Luego agregamos los días desde el PLAN
-                    attentionDate = new Date(planDate);
-                    attentionDate.setDate(planDate.getDate() + attention.value);
-                    break;
-                    
-                case 'months_from_plan':
-                    // Primero calculamos la fecha del PLAN (1 mes desde el inicio)
-                    const planDate2 = new Date(start);
-                    planDate2.setMonth(start.getMonth() + 1);
-                    // Luego agregamos los meses desde el PLAN
-                    attentionDate = new Date(planDate2);
-                    attentionDate.setMonth(planDate2.getMonth() + attention.value);
-                    break;
-            }
-
-            return attentionDate;
-        }
-
-        // Inicialización cuando se carga la página
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Página cargada, inicializando...');
+        // Función para inicializar la aplicación principal
+        function initializeApp() {
+            console.log('Inicializando aplicación principal...');
             
             // Establecer fecha actual en el input
             const today = new Date().toISOString().split('T')[0];
@@ -616,9 +909,64 @@
             
             // Mostrar calendario inicial
             updateCalendar();
-        });
 
-        // Inicializar Firebase
+            // Configurar sincronización periódica
+            setInterval(processSyncQueue, 5000);
+        }
+
+        // Función para mostrar indicador de sincronización
+        function showSyncIndicator(message = 'Sincronizando...') {
+            const indicator = document.getElementById('syncIndicator');
+            indicator.textContent = message;
+            indicator.style.display = 'block';
+        }
+
+        function hideSyncIndicator() {
+            document.getElementById('syncIndicator').style.display = 'none';
+        }
+
+        // Función para mostrar mensajes de éxito
+        function showSuccess(message) {
+            const successContainer = document.getElementById('successContainer');
+            successContainer.innerHTML = `<div class="success-message">${message}</div>`;
+            setTimeout(() => {
+                successContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Función para calcular fechas de atención
+        function calculateAttentionDate(startDate, attention) {
+            const start = new Date(startDate);
+            let attentionDate = new Date(start);
+
+            switch (attention.type) {
+                case 'days_from_start':
+                    attentionDate.setDate(start.getDate() + attention.value);
+                    break;
+                    
+                case 'months_from_start':
+                    attentionDate.setMonth(start.getMonth() + attention.value);
+                    break;
+                    
+                case 'days_from_plan':
+                    const planDate = new Date(start);
+                    planDate.setMonth(start.getMonth() + 1);
+                    attentionDate = new Date(planDate);
+                    attentionDate.setDate(planDate.getDate() + attention.value);
+                    break;
+                    
+                case 'months_from_plan':
+                    const planDate2 = new Date(start);
+                    planDate2.setMonth(start.getMonth() + 1);
+                    attentionDate = new Date(planDate2);
+                    attentionDate.setMonth(planDate2.getMonth() + attention.value);
+                    break;
+            }
+
+            return attentionDate;
+        }
+
+        // Inicializar Firebase con mejor manejo de errores
         function initializeFirebase() {
             try {
                 console.log('Inicializando Firebase...');
@@ -629,6 +977,10 @@
 
                 firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
+                
+                // Configurar persistencia offline
+                database.goOffline();
+                database.goOnline();
                 
                 // Configurar listeners para datos en tiempo real
                 setupRealtimeListeners();
@@ -643,69 +995,120 @@
             }
         }
 
-        // Configurar listeners de Firebase
+        // Configurar listeners de Firebase mejorados
         function setupRealtimeListeners() {
             try {
-                // Listener de conexión
+                // Listener de conexión mejorado
                 database.ref('.info/connected').on('value', (snapshot) => {
                     const connected = snapshot.val();
                     console.log('Estado de conexión:', connected);
                     updateConnectionStatus(connected);
                     
-                    if (connected && users.length === 0) {
-                        // Cargar datos cuando se conecte
-                        loadFirebaseData();
+                    if (connected) {
+                        // Procesar cola de sincronización cuando se reconecte
+                        processSyncQueue();
+                        
+                        if (users.length === 0) {
+                            loadFirebaseData();
+                        }
                     }
                 });
 
-                // Listener para usuarios
+                // Listener para usuarios con manejo mejorado
                 database.ref('users').on('value', (snapshot) => {
-                    console.log('Datos de usuarios actualizados');
+                    console.log('Datos de usuarios actualizados desde Firebase');
                     const data = snapshot.val();
-                    users = data ? Object.values(data) : [];
-                    updateUserList();
-                    updateCalendar();
-                    updateStats();
+                    const newUsers = data ? Object.values(data) : [];
+                    
+                    // Solo actualizar si hay cambios reales
+                    if (JSON.stringify(newUsers) !== JSON.stringify(users)) {
+                        users = newUsers;
+                        updateUserList();
+                        updateCalendar();
+                        updateStats();
+                        saveLocalData(); // Backup local
+                    }
+                }, (error) => {
+                    console.error('Error en listener de usuarios:', error);
                 });
 
-                // Listener para atenciones
+                // Listener para atenciones con manejo mejorado
                 database.ref('attentions').on('value', (snapshot) => {
-                    console.log('Datos de atenciones actualizados');
+                    console.log('Datos de atenciones actualizados desde Firebase');
                     const data = snapshot.val();
-                    attentions = data || {};
-                    updateCalendar();
-                    updateStats();
+                    const newAttentions = data || {};
+                    
+                    // Solo actualizar si hay cambios reales
+                    if (JSON.stringify(newAttentions) !== JSON.stringify(attentions)) {
+                        attentions = newAttentions;
+                        updateCalendar();
+                        updateStats();
+                        saveLocalData(); // Backup local
+                        
+                        // Notificar cambios si hay un modal abierto
+                        if (currentModalData) {
+                            updateModalFromData();
+                        }
+                    }
+                }, (error) => {
+                    console.error('Error en listener de atenciones:', error);
                 });
 
             } catch (error) {
                 console.error('Error configurando listeners:', error);
-                showError('Error configurando listeners: ' + error.message);
+                showError('Error configurando sincronización: ' + error.message);
             }
+        }
+
+        // Actualizar modal desde datos sincronizados
+        function updateModalFromData() {
+            if (!currentModalData) return;
+            
+            const attentionKey = `${currentModalData.user.id}_${currentModalData.type}`;
+            const savedAttention = attentions[attentionKey] || {};
+            
+            // Actualizar checkboxes sin disparar eventos
+            ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
+                const checkbox = document.getElementById(service);
+                if (checkbox) {
+                    checkbox.checked = savedAttention[service] || false;
+                }
+            });
+            
+            updateAttentionVisual();
         }
 
         // Cargar datos de Firebase
         function loadFirebaseData() {
-            database.ref('users').once('value').then((snapshot) => {
-                const data = snapshot.val();
-                users = data ? Object.values(data) : [];
+            showSyncIndicator('Cargando datos...');
+            
+            Promise.all([
+                database.ref('users').once('value'),
+                database.ref('attentions').once('value')
+            ]).then(([usersSnapshot, attentionsSnapshot]) => {
+                const userData = usersSnapshot.val();
+                const attentionData = attentionsSnapshot.val();
+                
+                users = userData ? Object.values(userData) : [];
+                attentions = attentionData || {};
+                
                 updateUserList();
                 updateCalendar();
                 updateStats();
+                saveLocalData();
+                
+                hideSyncIndicator();
+                console.log('Datos cargados desde Firebase:', users.length, 'usuarios');
+                
             }).catch((error) => {
-                console.error('Error cargando usuarios:', error);
-            });
-
-            database.ref('attentions').once('value').then((snapshot) => {
-                const data = snapshot.val();
-                attentions = data || {};
-                updateCalendar();
-                updateStats();
-            }).catch((error) => {
-                console.error('Error cargando atenciones:', error);
+                console.error('Error cargando datos:', error);
+                showError('Error cargando datos: ' + error.message);
+                hideSyncIndicator();
+                loadLocalData();
             });
         }
 
-        // Actualizar estado de conexión
+        // Actualizar estado de conexión mejorado
         function updateConnectionStatus(connected) {
             isOnline = connected;
             const statusElement = document.getElementById('connectionStatus');
@@ -719,10 +1122,86 @@
             }
         }
 
+        // Cola de sincronización mejorada
+        function addToSyncQueue(operation) {
+            syncQueue.push({
+                ...operation,
+                timestamp: Date.now(),
+                retries: 0
+            });
+            
+            if (isOnline) {
+                processSyncQueue();
+            }
+        }
+
+        // Procesar cola de sincronización
+        async function processSyncQueue() {
+            if (!isOnline || isSyncing || syncQueue.length === 0) {
+                return;
+            }
+            
+            isSyncing = true;
+            showSyncIndicator(`Sincronizando ${syncQueue.length} cambios...`);
+            
+            const queue = [...syncQueue];
+            syncQueue = [];
+            
+            for (const operation of queue) {
+                try {
+                    await executeOperation(operation);
+                    console.log('Operación sincronizada:', operation.type);
+                } catch (error) {
+                    console.error('Error en operación:', error);
+                    
+                    // Reintentar hasta 3 veces
+                    if (operation.retries < 3) {
+                        operation.retries++;
+                        syncQueue.push(operation);
+                    } else {
+                        console.error('Operación falló después de 3 intentos:', operation);
+                        showError('No se pudo sincronizar algunos cambios. Se guardaron localmente.');
+                    }
+                }
+            }
+            
+            isSyncing = false;
+            hideSyncIndicator();
+            
+            if (syncQueue.length === 0) {
+                showSuccess('Todos los cambios sincronizados correctamente');
+            }
+        }
+
+        // Ejecutar operación de sincronización
+        async function executeOperation(operation) {
+            switch (operation.type) {
+                case 'addUser':
+                    await database.ref(`users/${operation.data.id}`).set(operation.data);
+                    break;
+                case 'updateUser':
+                    await database.ref(`users/${operation.data.id}`).update(operation.data);
+                    break;
+                case 'removeUser':
+                    await database.ref(`users/${operation.userId}`).remove();
+                    break;
+                case 'saveAttention':
+                    await database.ref(`attentions/${operation.key}`).set(operation.data);
+                    break;
+                case 'removeUserAttentions':
+                    const updates = {};
+                    operation.keys.forEach(key => {
+                        updates[key] = null;
+                    });
+                    await database.ref('attentions').update(updates);
+                    break;
+            }
+        }
+
         // Mostrar errores
         function showError(message) {
             const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+            errorContainer.innerHTML = `<div class="error-message-app">${message}</div>`;
             setTimeout(() => {
                 errorContainer.innerHTML = '';
             }, 8000);
@@ -748,40 +1227,18 @@
             }
         }
 
-        // Guardar datos
-        function saveData() {
-            if (isOnline && database) {
-                try {
-                    // Guardar en Firebase
-                    const usersObj = {};
-                    users.forEach(user => {
-                        usersObj[user.id] = user;
-                    });
-                    database.ref('users').set(usersObj);
-                    database.ref('attentions').set(attentions);
-                    console.log('Datos guardados en Firebase');
-                } catch (error) {
-                    console.error('Error guardando en Firebase:', error);
-                    saveLocalData();
-                }
-            } else {
-                saveLocalData();
-            }
-        }
-
         // Guardar datos localmente
         function saveLocalData() {
             try {
                 localStorage.setItem('emj_users', JSON.stringify(users));
                 localStorage.setItem('emj_attentions', JSON.stringify(attentions));
-                console.log('Datos guardados localmente');
             } catch (error) {
                 console.error('Error guardando datos localmente:', error);
             }
         }
 
-        // Agregar usuario
-        function addUser() {
+        // Agregar usuario con sincronización mejorada
+        async function addUser() {
             const name = document.getElementById('userName').value.trim();
             const date = document.getElementById('userDate').value;
             
@@ -801,50 +1258,83 @@
                     id: Date.now(),
                     name: name,
                     startDate: date,
-                    egreso: false
+                    egreso: false,
+                    createdAt: new Date().toISOString()
                 };
                 
+                // Agregar a la lista local inmediatamente para mejor UX
                 users.push(user);
-                saveData();
-                
-                // Actualizar interfaz
                 updateUserList();
                 updateCalendar();
                 updateStats();
+                saveLocalData();
+                
+                // Agregar a la cola de sincronización
+                addToSyncQueue({
+                    type: 'addUser',
+                    data: user
+                });
                 
                 // Limpiar formulario
                 document.getElementById('userName').value = '';
                 document.getElementById('userDate').value = new Date().toISOString().split('T')[0];
                 
+                showSuccess(`Usuario "${name}" agregado correctamente`);
                 console.log('Usuario agregado exitosamente');
                 
             } catch (error) {
                 console.error('Error agregando usuario:', error);
                 showError('Error al agregar usuario: ' + error.message);
+                
+                // Revertir cambio local en caso de error
+                users = users.filter(u => u.id !== user.id);
+                updateUserList();
+                updateCalendar();
+                updateStats();
             } finally {
                 addBtn.disabled = false;
                 addBtn.textContent = '➕ Agregar Usuario';
             }
         }
 
-        // Eliminar usuario
-        function removeUser(userId) {
+        // Eliminar usuario con sincronización mejorada
+        async function removeUser(userId) {
             if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
                 try {
+                    const userToRemove = users.find(u => u.id === userId);
+                    
+                    // Eliminar de la lista local inmediatamente
                     users = users.filter(user => user.id !== userId);
                     
-                    // Eliminar atenciones del usuario
-                    Object.keys(attentions).forEach(key => {
-                        if (key.startsWith(userId + '_')) {
-                            delete attentions[key];
-                        }
+                    // Encontrar y eliminar atenciones del usuario
+                    const userAttentionKeys = Object.keys(attentions).filter(key => 
+                        key.startsWith(userId + '_')
+                    );
+                    
+                    userAttentionKeys.forEach(key => {
+                        delete attentions[key];
                     });
                     
-                    saveData();
+                    // Actualizar interfaz inmediatamente
                     updateUserList();
                     updateCalendar();
                     updateStats();
+                    saveLocalData();
                     
+                    // Agregar a la cola de sincronización
+                    addToSyncQueue({
+                        type: 'removeUser',
+                        userId: userId
+                    });
+                    
+                    if (userAttentionKeys.length > 0) {
+                        addToSyncQueue({
+                            type: 'removeUserAttentions',
+                            keys: userAttentionKeys
+                        });
+                    }
+                    
+                    showSuccess(`Usuario "${userToRemove?.name || 'Usuario'}" eliminado correctamente`);
                     console.log('Usuario eliminado exitosamente');
                     
                 } catch (error) {
@@ -854,22 +1344,34 @@
             }
         }
 
-        // Marcar egreso
-        function markEgreso() {
+        // Marcar egreso con sincronización mejorada
+        async function markEgreso() {
             if (currentModalData) {
                 const egresoBtn = document.getElementById('egresoBtn');
                 egresoBtn.disabled = true;
                 egresoBtn.textContent = '⏳ Procesando...';
                 
                 try {
+                    // Actualizar localmente inmediatamente
                     const user = users.find(u => u.id === currentModalData.userId);
                     if (user) {
                         user.egreso = true;
-                        saveData();
+                        user.egresoDate = new Date().toISOString();
+                        
+                        // Actualizar interfaz inmediatamente
                         updateUserList();
                         updateCalendar();
                         updateStats();
+                        saveLocalData();
+                        
+                        // Agregar a la cola de sincronización
+                        addToSyncQueue({
+                            type: 'updateUser',
+                            data: user
+                        });
+                        
                         closeModal();
+                        showSuccess(`Egreso marcado para "${user.name}"`);
                     }
                 } catch (error) {
                     console.error('Error marcando egreso:', error);
@@ -881,7 +1383,7 @@
             }
         }
 
-        // Actualizar calendario
+        // Actualizar calendario con mejor indicación de estados
         function updateCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -926,22 +1428,27 @@
                 
                 dayElement.innerHTML = `<div class="day-number">${cellDate.getDate()}</div>`;
                 
-                // Agregar marcadores de atención
+                // Agregar marcadores de atención con mejor estado visual
                 const attentionsForDay = getAttentionsForDate(cellDate);
                 attentionsForDay.forEach(attention => {
                     const marker = document.createElement('div');
                     marker.className = 'attention-marker';
                     
-                    // Verificar si está completada
+                    // Verificar estado de completación
                     const attentionKey = `${attention.user.id}_${attention.type}`;
                     const savedAttention = attentions[attentionKey];
-                    const isCompleted = savedAttention && Object.values(savedAttention).filter(Boolean).length === 4;
+                    const completedServices = savedAttention ? 
+                        Object.values(savedAttention).filter(v => v === true).length : 0;
                     
-                    if (isCompleted) {
+                    if (completedServices === 4) {
                         marker.classList.add('completed');
+                    } else if (completedServices > 0) {
+                        marker.classList.add('partial');
                     }
                     
                     marker.textContent = `${attention.user.name.split(' ')[0]} - ${attention.type}`;
+                    marker.title = `${attention.user.name} - ${attention.type}\nCompletado: ${completedServices}/4 servicios`;
+                    
                     marker.onclick = (e) => {
                         e.stopPropagation();
                         openAttentionModal(attention);
@@ -988,7 +1495,7 @@
             updateStats();
         }
 
-        // Modal de atenciones
+        // Modal de atenciones mejorado
         function openAttentionModal(attention) {
             currentModalData = attention;
             document.getElementById('modalTitle').textContent = attention.type;
@@ -1002,11 +1509,53 @@
             ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
                 const checkbox = document.getElementById(service);
                 checkbox.checked = savedAttention[service] || false;
-                checkbox.onchange = updateAttentionVisual;
+                
+                // Agregar listener para auto-guardado
+                checkbox.onchange = function() {
+                    updateAttentionVisual();
+                    autoSaveAttention();
+                };
             });
             
             updateAttentionVisual();
             document.getElementById('attentionModal').style.display = 'block';
+        }
+
+        // Auto-guardado cuando se cambia un checkbox
+        function autoSaveAttention() {
+            if (!currentModalData) return;
+            
+            const attentionKey = `${currentModalData.user.id}_${currentModalData.type}`;
+            const attentionData = {};
+            
+            ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
+                attentionData[service] = document.getElementById(service).checked;
+            });
+            
+            // Actualizar en memoria inmediatamente
+            attentions[attentionKey] = {
+                ...attentions[attentionKey],
+                ...attentionData,
+                lastModified: new Date().toISOString()
+            };
+            
+            // Guardar localmente
+            saveLocalData();
+            
+            // Agregar a la cola de sincronización
+            addToSyncQueue({
+                type: 'saveAttention',
+                key: attentionKey,
+                data: attentions[attentionKey]
+            });
+            
+            // Actualizar interfaz
+            updateCalendar();
+            updateStats();
+            
+            // Mostrar indicador visual temporal
+            showSyncIndicator('Guardando...');
+            setTimeout(hideSyncIndicator, 1000);
         }
 
         // Actualizar visual de atenciones
@@ -1022,8 +1571,8 @@
             });
         }
 
-        // Guardar atención
-        function saveAttention() {
+        // Guardar atención (función manual mejorada)
+        async function saveAttention() {
             if (!currentModalData) return;
             
             const saveBtn = document.getElementById('saveAttentionBtn');
@@ -1031,18 +1580,9 @@
             saveBtn.textContent = '⏳ Guardando...';
             
             try {
-                const attentionKey = `${currentModalData.user.id}_${currentModalData.type}`;
-                const attentionData = {};
+                autoSaveAttention(); // Usar la función de auto-guardado
                 
-                ['psicologia', 'trabajoSocial', 'pedagogia', 'nutricion'].forEach(service => {
-                    attentionData[service] = document.getElementById(service).checked;
-                });
-                
-                attentions[attentionKey] = attentionData;
-                saveData();
-                updateCalendar();
-                updateStats();
-                
+                showSuccess('Atención guardada correctamente');
                 closeModal();
                 console.log('Atención guardada exitosamente');
                 
@@ -1072,12 +1612,38 @@
             
             userList.innerHTML = '';
             
-            users.forEach(user => {
+            // Ordenar usuarios por fecha de ingreso (más recientes primero)
+            const sortedUsers = [...users].sort((a, b) => 
+                new Date(b.startDate) - new Date(a.startDate)
+            );
+            
+            sortedUsers.forEach(user => {
                 const userItem = document.createElement('div');
                 userItem.className = 'user-item';
+                
+                // Calcular progreso del usuario
+                let totalAttentions = 0;
+                let completedAttentions = 0;
+                
+                attentionRoute.forEach(attention => {
+                    const attentionKey = `${user.id}_${attention.name}`;
+                    const savedAttention = attentions[attentionKey];
+                    totalAttentions++;
+                    
+                    if (savedAttention && Object.values(savedAttention).filter(v => v === true).length === 4) {
+                        completedAttentions++;
+                    }
+                });
+                
+                const progressPercent = totalAttentions > 0 ? Math.round((completedAttentions / totalAttentions) * 100) : 0;
+                
                 userItem.innerHTML = `
                     <div class="user-name">${user.name} ${user.egreso ? '(EGRESO)' : ''}</div>
                     <div class="user-date">Ingreso: ${new Date(user.startDate).toLocaleDateString('es-ES')}</div>
+                    <div class="user-date">Progreso: ${completedAttentions}/${totalAttentions} (${progressPercent}%)</div>
+                    <div class="progress-bar" style="margin-top: 10px;">
+                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
                     <button class="btn btn-danger" onclick="removeUser(${user.id})" style="margin-top: 10px;">🗑️ Eliminar</button>
                 `;
                 userList.appendChild(userItem);
@@ -1109,7 +1675,7 @@
                     const savedAttention = attentions[attentionKey];
                     
                     if (savedAttention) {
-                        const completedServices = Object.values(savedAttention).filter(Boolean).length;
+                        const completedServices = Object.values(savedAttention).filter(v => v === true).length;
                         if (completedServices === 4) {
                             completed++;
                         }
@@ -1146,16 +1712,30 @@
         // Manejar errores no capturados
         window.addEventListener('error', function(event) {
             console.error('Error global:', event.error);
-            showError('Ocurrió un error inesperado. Revisa la consola para más detalles.');
+            showError('Ocurrió un error inesperado. La aplicación continuará funcionando.');
         });
 
         window.addEventListener('unhandledrejection', function(event) {
             console.error('Promesa rechazada:', event.reason);
-            showError('Error de conexión. La aplicación funcionará en modo offline.');
+        });
+
+        // Manejar cambios de conectividad
+        window.addEventListener('online', function() {
+            console.log('Conexión restaurada');
+            updateConnectionStatus(true);
+            if (database) {
+                database.goOnline();
+                processSyncQueue();
+            }
+        });
+
+        window.addEventListener('offline', function() {
+            console.log('Conexión perdida');
+            updateConnectionStatus(false);
         });
 
         // Logs de depuración
-        console.log('Script cargado completamente');
+        console.log('Script cargado completamente con autenticación y sincronización mejorada');
         console.log('Configuración de atenciones:', attentionRoute.length, 'tipos');
     </script>
 </body>
