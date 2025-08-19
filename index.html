@@ -21,15 +21,15 @@
         /* Estilos para la pantalla de login */
         .login-screen {
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 9999;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .login-container {
@@ -40,38 +40,36 @@
             text-align: center;
             max-width: 400px;
             width: 90%;
-            animation: slideIn 0.5s ease-out;
+            animation: loginFadeIn 0.5s ease-out;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
+        @keyframes loginFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-30px) scale(0.95); 
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
             }
         }
 
         .login-logo {
             font-size: 3em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #6e45e2;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .login-title {
             font-size: 1.8em;
-            color: #333;
+            color: #495057;
             margin-bottom: 10px;
             font-weight: bold;
         }
 
         .login-subtitle {
-            color: #666;
+            color: #6c757d;
             margin-bottom: 30px;
             font-size: 1.1em;
         }
@@ -80,7 +78,7 @@
             margin-bottom: 20px;
         }
 
-        .password-input {
+        .login-input {
             width: 100%;
             padding: 15px;
             border: 2px solid #e9ecef;
@@ -92,28 +90,29 @@
             letter-spacing: 2px;
         }
 
-        .password-input:focus {
+        .login-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.25);
+            border-color: #6e45e2;
+            box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.25);
+            transform: translateY(-2px);
         }
 
         .login-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 100%;
+            background: linear-gradient(45deg, #6e45e2, #88d3ce);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 15px;
             border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            width: 100%;
             transition: all 0.3s ease;
         }
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(110, 69, 226, 0.3);
         }
 
         .login-btn:disabled {
@@ -122,28 +121,41 @@
             transform: none;
         }
 
-        .error-message {
+        .login-error {
             background: #f8d7da;
             color: #721c24;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 15px;
+            margin-bottom: 20px;
             border: 1px solid #f5c6cb;
-            font-size: 14px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80% { transform: translateX(0); }
+            10%, 30%, 50%, 70% { transform: translateX(-5px); }
         }
 
         .login-footer {
             margin-top: 30px;
-            font-size: 12px;
-            color: #999;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
         }
 
-        /* Clase para ocultar el login */
-        .hidden {
+        /* App principal oculta inicialmente */
+        .main-app {
             display: none;
+            animation: appFadeIn 0.5s ease-out;
         }
 
-        /* Resto de estilos originales */
+        @keyframes appFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -165,25 +177,6 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .logout-btn {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
         }
 
         .connection-status {
@@ -537,7 +530,7 @@
             color: #6c757d;
         }
 
-        .error-message-app {
+        .error-message {
             background: #f8d7da;
             color: #721c24;
             padding: 15px;
@@ -584,6 +577,7 @@
             }
 
             .login-container {
+                margin: 20px;
                 padding: 30px 20px;
             }
         }
@@ -595,37 +589,37 @@
         <div class="login-container">
             <div class="login-logo">🌱</div>
             <h1 class="login-title">Semillas Salesianas</h1>
-            <p class="login-subtitle">Sistema EMJ - Acceso Seguro</p>
+            <p class="login-subtitle">Sistema de Monitoreo EMJ</p>
+            
+            <div id="loginError" class="login-error">
+                Contraseña incorrecta. Inténtalo de nuevo.
+            </div>
             
             <form class="login-form" onsubmit="handleLogin(event)">
                 <input 
                     type="password" 
                     id="passwordInput" 
-                    class="password-input" 
+                    class="login-input" 
                     placeholder="Ingresa la contraseña"
-                    autocomplete="current-password"
+                    maxlength="20"
+                    autocomplete="off"
                     required
                 />
-                <button type="submit" class="login-btn" id="loginBtn">
-                    🔓 Ingresar al Sistema
+                <button type="submit" id="loginBtn" class="login-btn">
+                    🔓 Acceder al Sistema
                 </button>
             </form>
             
-            <div id="loginError" class="error-message" style="display: none;">
-                ❌ Contraseña incorrecta. Inténtalo de nuevo.
-            </div>
-            
             <div class="login-footer">
-                <p>🔒 Acceso autorizado únicamente</p>
+                <small>Sistema de seguimiento de atenciones<br>Herramientas de Monitoreo MAC</small>
             </div>
         </div>
     </div>
 
     <!-- Aplicación Principal -->
-    <div id="mainApp" class="hidden">
+    <div id="mainApp" class="main-app">
         <div class="container">
             <div class="header">
-                <button class="logout-btn" onclick="logout()">🚪 Cerrar Sesión</button>
                 <div class="connection-status" id="connectionStatus">
                     🔄 Conectando...
                 </div>
@@ -739,110 +733,104 @@
 
     <script>
         // Configuración de autenticación
-        const CORRECT_PASSWORD = 'Mauxi123';
-        const SESSION_KEY = 'emj_authenticated';
+        const CORRECT_PASSWORD = 'nunito12';
+        const AUTH_KEY = 'emj_authenticated';
+        const AUTH_DURATION = 24 * 60 * 60 * 1000; // 24 horas
 
-        // Verificar autenticación al cargar la página
-        function checkAuthentication() {
-            const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
-            
-            if (isAuthenticated) {
-                showMainApp();
-            } else {
-                showLoginScreen();
-            }
-        }
-
-        // Mostrar pantalla de login
-        function showLoginScreen() {
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('passwordInput').focus();
-        }
-
-        // Mostrar aplicación principal
-        function showMainApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            
-            // Inicializar la aplicación solo si no ha sido inicializada
-            if (!window.appInitialized) {
-                initializeApp();
-                window.appInitialized = true;
-            }
-        }
-
-        // Manejar login
+        // Función para manejar el login
         function handleLogin(event) {
             event.preventDefault();
             
-            const password = document.getElementById('passwordInput').value;
+            const passwordInput = document.getElementById('passwordInput');
             const loginBtn = document.getElementById('loginBtn');
-            const errorDiv = document.getElementById('loginError');
+            const loginError = document.getElementById('loginError');
+            const enteredPassword = passwordInput.value;
             
-            // Deshabilitar botón temporalmente
+            // Deshabilitar botón durante el proceso
             loginBtn.disabled = true;
             loginBtn.textContent = '🔄 Verificando...';
             
             // Simular un pequeño delay para mejor UX
             setTimeout(() => {
-                if (password === CORRECT_PASSWORD) {
-                    // Login exitoso
-                    sessionStorage.setItem(SESSION_KEY, 'true');
-                    errorDiv.style.display = 'none';
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    // Contraseña correcta
+                    console.log('Acceso concedido');
                     
-                    // Animación de éxito
-                    loginBtn.textContent = '✅ ¡Acceso Autorizado!';
-                    loginBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                    // Guardar estado de autenticación
+                    const authData = {
+                        timestamp: Date.now(),
+                        authenticated: true
+                    };
+                    localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
                     
-                    setTimeout(() => {
-                        showMainApp();
-                        // Resetear formulario
-                        document.getElementById('passwordInput').value = '';
-                        loginBtn.disabled = false;
-                        loginBtn.textContent = '🔓 Ingresar al Sistema';
-                        loginBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-                    }, 1000);
+                    // Ocultar pantalla de login y mostrar app
+                    showMainApp();
+                    
                 } else {
-                    // Login fallido
-                    errorDiv.style.display = 'block';
-                    document.getElementById('passwordInput').value = '';
-                    document.getElementById('passwordInput').focus();
+                    // Contraseña incorrecta
+                    console.log('Acceso denegado');
+                    loginError.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
                     
-                    // Animación de error
-                    loginBtn.textContent = '❌ Acceso Denegado';
-                    loginBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                    // Efecto de shake en el container
+                    const loginContainer = document.querySelector('.login-container');
+                    loginContainer.style.animation = 'none';
+                    loginContainer.offsetHeight; // Trigger reflow
+                    loginContainer.style.animation = 'shake 0.5s ease-in-out';
                     
                     setTimeout(() => {
-                        loginBtn.disabled = false;
-                        loginBtn.textContent = '🔓 Ingresar al Sistema';
-                        loginBtn.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-                    }, 2000);
+                        loginError.style.display = 'none';
+                    }, 3000);
                 }
-            }, 1000);
+                
+                // Restaurar botón
+                loginBtn.disabled = false;
+                loginBtn.textContent = '🔓 Acceder al Sistema';
+            }, 800);
         }
 
-        // Cerrar sesión
-        function logout() {
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                sessionStorage.removeItem(SESSION_KEY);
-                showLoginScreen();
+        // Función para mostrar la aplicación principal
+        function showMainApp() {
+            const loginScreen = document.getElementById('loginScreen');
+            const mainApp = document.getElementById('mainApp');
+            
+            // Ocultar login con animación
+            loginScreen.style.opacity = '0';
+            loginScreen.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                loginScreen.style.display = 'none';
+                mainApp.style.display = 'block';
+                
+                // Inicializar la aplicación principal
+                initializeMainApp();
+            }, 300);
+        }
+
+        // Verificar si el usuario ya está autenticado
+        function checkAuthentication() {
+            try {
+                const authData = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
+                const now = Date.now();
+                
+                // Verificar si la autenticación es válida y no ha expirado
+                if (authData.authenticated && authData.timestamp && (now - authData.timestamp) < AUTH_DURATION) {
+                    console.log('Usuario ya autenticado');
+                    showMainApp();
+                    return true;
+                } else {
+                    // Limpiar autenticación expirada
+                    localStorage.removeItem(AUTH_KEY);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error verificando autenticación:', error);
+                localStorage.removeItem(AUTH_KEY);
+                return false;
             }
         }
 
-        // Manejar Enter en el campo de contraseña
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthentication();
-            
-            document.getElementById('passwordInput').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    handleLogin(event);
-                }
-            });
-        });
-
-        // RESTO DEL CÓDIGO ORIGINAL DE LA APLICACIÓN (sin modificaciones)
-        
         // Configuración Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBL-oAE3Mam_nwRTME-Rt87KE1VAJ9ieQs",
@@ -887,32 +875,6 @@
         let isOnline = false;
         let syncQueue = [];
         let isSyncing = false;
-
-        // Función para inicializar la aplicación principal
-        function initializeApp() {
-            console.log('Inicializando aplicación principal...');
-            
-            // Establecer fecha actual en el input
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('userDate').value = today;
-            
-            // Inicializar Firebase
-            initializeFirebase();
-            
-            // Cargar datos iniciales si Firebase falla
-            setTimeout(() => {
-                if (!isOnline) {
-                    console.log('Firebase no conectado, cargando datos locales');
-                    loadLocalData();
-                }
-            }, 3000);
-            
-            // Mostrar calendario inicial
-            updateCalendar();
-
-            // Configurar sincronización periódica
-            setInterval(processSyncQueue, 5000);
-        }
 
         // Función para mostrar indicador de sincronización
         function showSyncIndicator(message = 'Sincronizando...') {
@@ -965,6 +927,44 @@
 
             return attentionDate;
         }
+
+        // Función para inicializar la aplicación principal
+        function initializeMainApp() {
+            console.log('Inicializando aplicación principal...');
+            
+            // Establecer fecha actual en el input
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('userDate').value = today;
+            
+            // Inicializar Firebase
+            initializeFirebase();
+            
+            // Cargar datos iniciales si Firebase falla
+            setTimeout(() => {
+                if (!isOnline) {
+                    console.log('Firebase no conectado, cargando datos locales');
+                    loadLocalData();
+                }
+            }, 3000);
+            
+            // Mostrar calendario inicial
+            updateCalendar();
+
+            // Configurar sincronización periódica
+            setInterval(processSyncQueue, 5000);
+        }
+
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página cargada, verificando autenticación...');
+            
+            // Verificar si el usuario ya está autenticado
+            if (!checkAuthentication()) {
+                // Mostrar pantalla de login
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('passwordInput').focus();
+            }
+        });
 
         // Inicializar Firebase con mejor manejo de errores
         function initializeFirebase() {
@@ -1201,7 +1201,7 @@
         // Mostrar errores
         function showError(message) {
             const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = `<div class="error-message-app">${message}</div>`;
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
             setTimeout(() => {
                 errorContainer.innerHTML = '';
             }, 8000);
@@ -1689,7 +1689,7 @@
             document.getElementById('completedAttentions').textContent = completed;
             document.getElementById('completionPercentage').textContent = percentage + '%';
             
-            // Actualizar barra de progreso
+// Actualizar barra de progreso
             const progressFill = document.getElementById('progressFill');
             progressFill.style.width = percentage + '%';
             
@@ -1735,7 +1735,7 @@
         });
 
         // Logs de depuración
-        console.log('Script cargado completamente con autenticación y sincronización mejorada');
+        console.log('Script cargado completamente con sincronización mejorada');
         console.log('Configuración de atenciones:', attentionRoute.length, 'tipos');
     </script>
 </body>
