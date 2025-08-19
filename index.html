@@ -761,7 +761,7 @@
                         timestamp: Date.now(),
                         authenticated: true
                     };
-                    localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
+                    sessionStorage.setItem(AUTH_KEY, JSON.stringify(authData));
                     
                     // Ocultar pantalla de login y mostrar app
                     showMainApp();
